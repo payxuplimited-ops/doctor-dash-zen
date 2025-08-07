@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppSidebar } from "@/components/AppSidebar";
 import { NotificationBell } from "@/components/NotificationBell";
+import { UserProfile } from "@/components/UserProfile";
 import Dashboard from "./pages/Dashboard";
 import Appointments from "./pages/Appointments";
 import NotFound from "./pages/NotFound";
@@ -29,7 +30,10 @@ const App = () => (
                     <h2 className="font-semibold">Sistema de Gestión Médica</h2>
                   </div>
                 </div>
-                <NotificationBell />
+                <div className="flex items-center gap-2">
+                  <NotificationBell />
+                  <UserProfile />
+                </div>
               </header>
               <main className="flex-1 p-6 bg-muted/20">
                 <Routes>

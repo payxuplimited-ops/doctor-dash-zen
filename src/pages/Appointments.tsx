@@ -255,8 +255,8 @@ export default function Appointments() {
             Calendario de Citas
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="w-full calendar-container">
+        <CardContent className="p-0">
+          <div className="w-full calendar-container p-4">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
               headerToolbar={{

@@ -113,6 +113,13 @@ All colors MUST be HSL.
 /* FullCalendar custom styling to match dashboard theme */
 .calendar-container .fc {
   font-family: inherit;
+  width: 100%;
+}
+
+/* Ensure calendar takes full width regardless of sidebar state */
+.calendar-container {
+  width: 100%;
+  overflow-x: auto;
 }
 
 .calendar-container .fc-theme-standard .fc-scrollgrid {
