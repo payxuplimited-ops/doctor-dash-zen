@@ -109,3 +109,89 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* FullCalendar custom styling to match dashboard theme */
+.calendar-container .fc {
+  font-family: inherit;
+}
+
+.calendar-container .fc-theme-standard .fc-scrollgrid {
+  border: 1px solid hsl(var(--border));
+}
+
+.calendar-container .fc-theme-standard td,
+.calendar-container .fc-theme-standard th {
+  border: 1px solid hsl(var(--border));
+}
+
+.calendar-container .fc-button-primary {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.calendar-container .fc-button-primary:hover {
+  background-color: hsl(var(--primary)/0.9);
+  border-color: hsl(var(--primary)/0.9);
+}
+
+.calendar-container .fc-button-primary:focus,
+.calendar-container .fc-button-primary:active {
+  background-color: hsl(var(--primary)/0.9);
+  border-color: hsl(var(--primary)/0.9);
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.calendar-container .fc-button-primary:disabled {
+  background-color: hsl(var(--muted));
+  border-color: hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+}
+
+.calendar-container .fc-toolbar-title {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+.calendar-container .fc-col-header-cell {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+}
+
+.calendar-container .fc-daygrid-day-number {
+  color: hsl(var(--foreground));
+}
+
+.calendar-container .fc-day-today {
+  background-color: hsl(var(--accent)/0.1);
+}
+
+.calendar-container .fc-event {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.calendar-container .fc-event:hover {
+  background-color: hsl(var(--primary)/0.9);
+  border-color: hsl(var(--primary)/0.9);
+}
+
+.calendar-container .fc-daygrid-event {
+  margin: 1px 2px;
+}
+
+.calendar-container .fc-h-event {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.calendar-container .fc-highlight {
+  background-color: hsl(var(--accent)/0.2);
+}
+
+.calendar-container .fc-select-helper {
+  background-color: hsl(var(--primary)/0.2);
+  border-color: hsl(var(--primary));
+}

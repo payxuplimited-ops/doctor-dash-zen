@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppSidebar } from "@/components/AppSidebar";
 import { NotificationBell } from "@/components/NotificationBell";
 import Dashboard from "./pages/Dashboard";
+import Appointments from "./pages/Appointments";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
               <main className="flex-1 p-6 bg-muted/20">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
+                  <Route path="/appointments" element={<Appointments />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
