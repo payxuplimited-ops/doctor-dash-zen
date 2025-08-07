@@ -114,12 +114,70 @@ All colors MUST be HSL.
 .calendar-container .fc {
   font-family: inherit;
   width: 100%;
+  min-width: 100%;
 }
 
 /* Ensure calendar takes full width regardless of sidebar state */
 .calendar-container {
   width: 100%;
+  min-width: 0;
   overflow-x: auto;
+}
+
+/* Mobile-specific calendar optimizations */
+@media (max-width: 767px) {
+  .calendar-container {
+    padding: 0.5rem;
+  }
+  
+  .calendar-container .fc-toolbar {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .calendar-container .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .calendar-container .fc-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .calendar-container .fc-toolbar-title {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .calendar-container .fc-daygrid-day-number {
+    font-size: 0.875rem;
+    padding: 0.25rem;
+  }
+  
+  .calendar-container .fc-daygrid-event {
+    margin: 0.5px 1px;
+    font-size: 0.75rem;
+  }
+  
+  .calendar-container .fc-col-header-cell {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+  }
+  
+  .calendar-container .fc-daygrid-day {
+    min-height: 2.5rem;
+  }
+}
+
+/* Responsive width adaptation */
+@media (min-width: 768px) {
+  .calendar-container .fc {
+    min-width: 100%;
+  }
 }
 
 .calendar-container .fc-theme-standard .fc-scrollgrid {
@@ -201,4 +259,30 @@ All colors MUST be HSL.
 .calendar-container .fc-select-helper {
   background-color: hsl(var(--primary)/0.2);
   border-color: hsl(var(--primary));
+}
+
+/* Ensure full width adaptation on all screen sizes */
+.calendar-container .fc-view-harness {
+  width: 100%;
+}
+
+.calendar-container .fc-scrollgrid {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.calendar-container .fc-scrollgrid-sync-table {
+  width: 100%;
+}
+
+/* Enhanced mobile event visibility */
+@media (max-width: 767px) {
+  .calendar-container .fc-event-title {
+    font-size: 0.6875rem;
+    line-height: 1.2;
+  }
+  
+  .calendar-container .fc-daygrid-block-event .fc-event-title {
+    padding: 1px 2px;
+  }
 }

@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AppointmentEvent extends EventInput {
   id: string;
@@ -66,6 +67,7 @@ export default function Appointments() {
   });
   
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     const selectedDateTime = selectInfo.start.toISOString().split('T')[0];
@@ -137,21 +139,23 @@ export default function Appointments() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={`${isMobile ? 'space-y-3' : 'space-y-6'}`}>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Citas Médicas</h1>
-          <p className="text-muted-foreground">
-            Gestiona y programa las citas del consultorio
+      <div className={`flex items-center justify-between ${isMobile ? 'flex-col gap-3' : ''}`}>
+        <div className={isMobile ? 'text-center' : ''}>
+          <h1 className={`font-bold tracking-tight ${isMobile ? 'text-xl' : 'text-3xl'}`}>
+            {isMobile ? 'Citas' : 'Citas Médicas'}
+          </h1>
+          <p className={`text-muted-foreground ${isMobile ? 'text-sm' : ''}`}>
+            {isMobile ? 'Gestiona citas' : 'Gestiona y programa las citas del consultorio'}
           </p>
         </div>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNewAppointmentDialog} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Nueva Cita
+            <Button onClick={openNewAppointmentDialog} className={`gap-2 ${isMobile ? 'text-sm px-3 py-2' : ''}`}>
+              <Plus className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+              {isMobile ? 'Nueva' : 'Nueva Cita'}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
@@ -256,10 +260,14 @@ export default function Appointments() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="w-full calendar-container p-4">
+          <div className={`w-full calendar-container ${isMobile ? 'p-2' : 'p-4'}`}>
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-              headerToolbar={{
+              headerToolbar={isMobile ? {
+                left: 'prev,next',
+                center: 'title',
+                right: 'today'
+              } : {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
@@ -268,7 +276,7 @@ export default function Appointments() {
               editable={true}
               selectable={true}
               selectMirror={true}
-              dayMaxEvents={true}
+              dayMaxEvents={isMobile ? 2 : true}
               weekends={true}
               events={events}
               select={handleDateSelect}
@@ -292,19 +300,21 @@ export default function Appointments() {
               eventBackgroundColor="hsl(var(--primary))"
               eventBorderColor="hsl(var(--primary))"
               eventTextColor="hsl(var(--primary-foreground))"
+              aspectRatio={isMobile ? 1.0 : 1.35}
+              contentHeight={isMobile ? "auto" : undefined}
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-3'}`}>
         <Card>
-          <CardContent className="flex items-center p-6">
-            <Calendar className="h-8 w-8 text-primary" />
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Citas Hoy</p>
-              <p className="text-2xl font-bold">{events.filter(event => {
+          <CardContent className={`flex items-center ${isMobile ? 'p-4' : 'p-6'}`}>
+            <Calendar className={`text-primary ${isMobile ? 'h-6 w-6' : 'h-8 w-8'}`} />
+            <div className={isMobile ? 'ml-3' : 'ml-4'}>
+              <p className={`font-medium text-muted-foreground ${isMobile ? 'text-xs' : 'text-sm'}`}>Citas Hoy</p>
+              <p className={`font-bold ${isMobile ? 'text-xl' : 'text-2xl'}`}>{events.filter(event => {
                 const today = new Date().toISOString().split('T')[0];
                 return event.start?.includes(today);
               }).length}</p>
@@ -313,21 +323,21 @@ export default function Appointments() {
         </Card>
         
         <Card>
-          <CardContent className="flex items-center p-6">
-            <Clock className="h-8 w-8 text-success" />
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Esta Semana</p>
-              <p className="text-2xl font-bold">{events.length}</p>
+          <CardContent className={`flex items-center ${isMobile ? 'p-4' : 'p-6'}`}>
+            <Clock className={`text-success ${isMobile ? 'h-6 w-6' : 'h-8 w-8'}`} />
+            <div className={isMobile ? 'ml-3' : 'ml-4'}>
+              <p className={`font-medium text-muted-foreground ${isMobile ? 'text-xs' : 'text-sm'}`}>Esta Semana</p>
+              <p className={`font-bold ${isMobile ? 'text-xl' : 'text-2xl'}`}>{events.length}</p>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="flex items-center p-6">
-            <User className="h-8 w-8 text-warning" />
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Pacientes Únicos</p>
-              <p className="text-2xl font-bold">{new Set(events.map(e => e.patientName)).size}</p>
+          <CardContent className={`flex items-center ${isMobile ? 'p-4' : 'p-6'}`}>
+            <User className={`text-warning ${isMobile ? 'h-6 w-6' : 'h-8 w-8'}`} />
+            <div className={isMobile ? 'ml-3' : 'ml-4'}>
+              <p className={`font-medium text-muted-foreground ${isMobile ? 'text-xs' : 'text-sm'}`}>Pacientes Únicos</p>
+              <p className={`font-bold ${isMobile ? 'text-xl' : 'text-2xl'}`}>{new Set(events.map(e => e.patientName)).size}</p>
             </div>
           </CardContent>
         </Card>
