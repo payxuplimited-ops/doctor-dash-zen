@@ -1,109 +1,92 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { AppointmentsList } from "@/components/AppointmentsList";
-import { Clock } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import { 
+  Users, 
+  Calendar, 
+  Stethoscope, 
+  TrendingUp, 
+  Activity,
+  Clock
+} from "lucide-react"
+import { StatCard } from "@/components/StatCard"
+import { AppointmentsList } from "@/components/AppointmentsList"
+import { RecentPatients } from "@/components/RecentPatients"
 
-interface Appointment {
-  id: string;
-  patientName: string;
-  time: string;
-  type: string;
-  status: "confirmada" | "pendiente" | "completada" | "cancelada";
-  phone?: string;
-  date: string;
-}
-
-function Dashboard() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate("/login"); 
-          return;
-        }
-
-        const response = await axios.get("http://localhost:3000/api/citas", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const allAppointments = response.data;
-
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const today = `${year}-${month}-${day}`;
-
-        const appointmentsToday = allAppointments.filter((app: any) => {
-            const appointmentDate = app.dia_y_hora.slice(0, 10);
-            return appointmentDate === today;
-        });
-
-        const mappedAppointments = appointmentsToday.map((app: any) => ({
-            id: app.id,
-            patientName: app.paciente_nombre,
-            time: app.dia_y_hora.slice(11, 16),
-            type: "Consulta General",
-            status: app.estado.toLowerCase() as "confirmada" | "pendiente" | "completada" | "cancelada",
-            date: app.dia_y_hora.slice(0, 10),
-            phone: "N/A",
-        }));
-
-        setAppointments(mappedAppointments);
-      } catch (err) {
-        if (axios.isAxiosError(err) && err.response?.status === 401) {
-          // Si el error es 401, el token es inválido. Borra el token y redirige.
-          localStorage.removeItem("token");
-          // La recarga se maneja en App.tsx, por lo que aquí solo informamos del error
-          setError("Tu sesión ha expirado, por favor inicia sesión de nuevo.");
-          window.location.reload(); // Fuerza la recarga para que App.tsx detecte el cambio de token
-        } else {
-          setError("Error al cargar las citas.");
-        }
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAppointments();
-  }, [navigate]);
-
-  if (loading) {
-    return <p className="text-center text-gray-500">Cargando citas...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
-  }
-
+export default function Dashboard() {
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Citas de Hoy
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {appointments.length > 0 ? (
-            <AppointmentsList appointments={appointments} />
-          ) : (
-            <p className="text-center text-gray-500">No hay citas programadas para hoy.</p>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Resumen de la actividad del consultorio médico
+        </p>
+      </div>
 
-export default Dashboard;
+      {/* Stats Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Pacientes Totales"
+          value="1,284"
+          icon={Users}
+          description="Pacientes registrados"
+          trend={{ value: 12, isPositive: true }}
+          variant="default"
+        />
+        <StatCard
+          title="Citas Hoy"
+          value="8"
+          icon={Calendar}
+          description="Citas programadas"
+          variant="success"
+        />
+        <StatCard
+          title="Consultas del Mes"
+          value="156"
+          icon={Stethoscope}
+          description="Consultas realizadas"
+          trend={{ value: 8, isPositive: true }}
+          variant="default"
+        />
+        <StatCard
+          title="Tasa de Asistencia"
+          value="94%"
+          icon={TrendingUp}
+          description="Promedio mensual"
+          trend={{ value: 2, isPositive: true }}
+          variant="success"
+        />
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <AppointmentsList />
+        <RecentPatients />
+      </div>
+
+      {/* Additional Stats */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatCard
+          title="Tiempo Promedio"
+          value="25 min"
+          icon={Clock}
+          description="Por consulta"
+          variant="default"
+        />
+        <StatCard
+          title="Pacientes Nuevos"
+          value="23"
+          icon={Users}
+          description="Este mes"
+          trend={{ value: 15, isPositive: true }}
+          variant="success"
+        />
+        <StatCard
+          title="Seguimientos"
+          value="45"
+          icon={Activity}
+          description="Pendientes"
+          variant="warning"
+        />
+      </div>
+    </div>
+  )
+}
