@@ -11,12 +11,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import Dashboard from "./pages/Dashboard";
 import Appointments from "./pages/Appointments";
 import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
-
 const App = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
+  return <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -24,21 +21,17 @@ const App = () => {
           <AppLayout />
         </BrowserRouter>
       </TooltipProvider>
-    </QueryClientProvider>
-  );
+    </QueryClientProvider>;
 };
-
 const AppLayout = () => {
   const isMobile = useIsMobile();
-
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col">
-          <header className="h-14 flex items-center justify-between border-b bg-background px-4">
+          <header className="h-14 flex items-center justify-between border-b bg-background mx-0 px-[16px]">
             <div className="flex items-center">
-              {!isMobile && <SidebarTrigger />}
+              {!isMobile}
               <div className={isMobile ? "ml-0" : "ml-4"}>
                 <h2 className={`font-semibold ${isMobile ? "text-sm" : ""}`}>
                   {isMobile ? "Gestión Médica" : "Sistema de Gestión Médica"}
@@ -60,8 +53,6 @@ const AppLayout = () => {
           </main>
         </div>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default App;
